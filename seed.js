@@ -3,9 +3,7 @@
 
 var db = require("./models");
 
-var albumsList =[
-  // put data here!
-];
+var albumsList =['The Life of Pablo', 'Yeezus', 'My Beautiful Dark Twisted Fantasy', '808s & Heartbreak'];
 
 db.Album.remove({}, function(err, albums){
 
