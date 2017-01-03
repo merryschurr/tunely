@@ -1,57 +1,21 @@
-// SERVER-SIDE JAVASCRIPT
-
-//require express in our app
 var express = require('express');
-// generate a new express app and call it 'app'
 var app = express();
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 
-// serve static files from public folder
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /************
  * DATABASE *
  ************/
 
- var db = require('./models');
-
-/* hard-coded data */
-var albums = [];
-albums.push({
-              _id: 132,
-              artistName: 'Kanye West',
-              name: 'The Life of Pablo',
-              releaseDate: 'Febraury 14, 2016',
-              genres: [ 'rap', 'hip hop' ]
-            });
-albums.push({
-              _id: 133,
-              artistName: 'Kanye West',
-              name: 'Yeezus',
-              releaseDate: 'June 18, 2013',
-              genres: [ 'hip hop' ]
-            });
-albums.push({
-              _id: 134,
-              artistName: 'Kanye West',
-              name: 'My Beautiful Dark Twisted Fantasy',
-              releaseDate: 'November 22, 2010',
-              genres: [ 'rap', 'hip hop' ]
-            });
-albums.push({
-              _id: 135,
-              artistName: 'Kanye West',
-              name: '808s & Heartbreak',
-              releaseDate: 'November 24, 2008',
-              genres: [ 'r&b', 'electropop', 'synthpop' ]
-            });
-
-
+var db = require('./models');
 
 /**********
  * ROUTES *
  **********/
-// var routes = require('/api/albums');
-// app.use('/', routes);
+
 /*
  * HTML Endpoints
  */
@@ -76,9 +40,44 @@ app.get('/api', function api_index (req, res){
   });
 });
 
-app.get('/api/albums', function album_index(req, res){
-  res.json(albums);
-})
+app.get('/api/albums', function albumsIndex(req, res) {
+  db.Album.find({}, function(err, albums) {
+    res.json(albums);
+  });
+});
+
+app.post('/api/albums', function albumCreate(req, res) {
+  console.log('body', req.body);
+  
+  var genres = req.body.genres.split(',').map(function(item) { return item.trim(); } );
+  req.body.genres = genres;
+
+  db.Album.create(req.body, function(err, album) {
+    if (err) { console.log('error', err); }
+    console.log(album);
+    res.json(album);
+  });
+
+});
+
+
+app.post('/api/albums/:albumId/songs', function songsCreate(req, res) {
+  console.log('body', req.body);
+  db.Album.findOne({_id: req.params.albumId}, function(err, album) {
+    if (err) { console.log('error', err); }
+
+    var song = new db.Song(req.body);
+    album.songs.push(song);
+    album.save(function(err, savedAlbum) {
+      if (err) { console.log('error', err); }
+      console.log('album with new song saved:', savedAlbum);
+      res.json(song);
+    });
+  });
+
+});
+
+
 
 /**********
  * SERVER *

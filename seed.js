@@ -1,9 +1,41 @@
-// This file allows us to seed our application with data
-// simply run: `node seed.js` from the root of this project folder.
-
 var db = require("./models");
 
-var albumsList =['The Life of Pablo', 'Yeezus', 'My Beautiful Dark Twisted Fantasy', '808s & Heartbreak'];
+/* hard-coded data */
+var albumsList = [];
+albumsList.push({
+              _id: 132,
+              artistName: 'Kanye West',
+              name: 'The Life of Pablo',
+              releaseDate: 'Febraury 14, 2016',
+              genres: [ 'rap', 'hip hop' ]
+            });
+albumsList.push({
+              _id: 133,
+              artistName: 'Kanye West',
+              name: 'Yeezus',
+              releaseDate: 'June 18, 2013',
+              genres: [ 'hip hop' ]
+            });
+albumsList.push({
+              _id: 134,
+              artistName: 'Kanye West',
+              name: 'My Beautiful Dark Twisted Fantasy',
+              releaseDate: 'November 22, 2010',
+              genres: [ 'rap', 'hip hop' ]
+            });
+albumsList.push({
+              _id: 135,
+              artistName: 'Kanye West',
+              name: '808s & Heartbreak',
+              releaseDate: 'November 24, 2008',
+              genres: [ 'r&b', 'electropop', 'synthpop' ]
+            });
+
+
+albumList.forEach(function(album) {
+  album.songs = sampleSongs;
+});
+
 
 db.Album.remove({}, function(err, albums){
 

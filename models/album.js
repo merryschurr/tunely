@@ -1,8 +1,6 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-
- 
 var AlbumsSchema = new Schema({
    	albums: {
      	type: Schema.Types.ObjectId,
@@ -14,9 +12,6 @@ var AlbumsSchema = new Schema({
   		genres: String
 });
 
+var Albums = mongoose.model('Albums', AlbumsSchema);
  
-       
- 
- var Albums = mongoose.model('Albums', AlbumsSchema);
- 
- module.exports = Albums;
+module.exports = Albums;
